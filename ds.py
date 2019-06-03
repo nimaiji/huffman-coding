@@ -51,7 +51,7 @@ class tree:
         self.name = name
         self.isPrefect = isPrefect
         self.nodes = []
-        self.size = len(self.nodes)
+
         if (head.isHead):
             self.head = head
             head.setHead()
@@ -62,11 +62,17 @@ class tree:
     def insertNode(self):
         pass
 
+    def getSize(self):
+        return len(self.nodes)
+
 
 class minHeap(tree):
 
     def __init__(self, head, name='min heap', isPrefect=True):
         super().__init__(head, name, isPrefect)
+
+    def popNode(self):
+        return self.nodes.pop()
 
     def insertNode(self, newNode):
         # new node index
@@ -99,3 +105,28 @@ class minHeap(tree):
                     self.heapify(int((index - 1) / 2))
                 else:
                     self.heapify(int((index - 2) / 2))
+
+
+class huffmanTree(tree):
+
+    def __init__(self, head, name='huffman tree', isPrefect=True):
+        super().__init__(head, name, isPrefect)
+
+    def insertNode(self, node1, node2):
+        newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
+        newNode.addChild(node1)
+        newNode.addChild(node2)
+
+
+class huffman:
+
+    def __init__(self, minHeap):
+        self.minHeap = minHeap
+        self.size = minHeap.getSize()
+        self.huffmanTree = None
+
+    def generateTree(self):
+        for x in range(self.size):
+            a = minHeap.popNode()
+            b = minHeap.popNode()
+            self.huffmanTree.insertNode(a, b)
