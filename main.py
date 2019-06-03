@@ -18,7 +18,7 @@ for line in file:
 
 
 
-print(quantity)
+print(len(quantity))
 
 #using min heap
 item = quantity.popitem()
@@ -26,10 +26,13 @@ head = ds.node(item[0],item[1])
 minHeap = ds.minHeap(head)
 for n in quantity:
     minHeap.insertNode(ds.node(n,quantity[n]))
-#
+
 # for x in minHeap.nodes:
 #     print(x)
 
+huffman = ds.huffman(minHeap)
+huffman.generateTree()
+print(huffman.huffmanTree.head)
 
 # head = ds.node('head',20)
 # n1 = ds.node('n1',17)

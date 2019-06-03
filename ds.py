@@ -1,4 +1,5 @@
 import enum
+import queue
 
 
 class dir(enum.Enum):
@@ -21,6 +22,7 @@ class node:
 
     def addParent(self, parent):
         self.parents.append(parent)
+        parent.childs
 
     def removeChild(self, value):
         for child in self.childs:
@@ -111,22 +113,41 @@ class huffmanTree(tree):
 
     def __init__(self, head, name='huffman tree', isPrefect=True):
         super().__init__(head, name, isPrefect)
+        self.q = queue.Queue()
 
     def insertNode(self, node1, node2):
         newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
         newNode.addChild(node1)
         newNode.addChild(node2)
+        if (self.q.qsize() == 1):
+            self.insertNode(self.q.get(), newNode)
+        else:
+            self.q.put(newNode)
+
+    def insertSingleNode(self, child):
+        headNode = self.q.get()
+        newNode = node("{},{}".format(headNode.name, child.name), headNode.value + child.value)
+        newNode.addChild(headNode)
+        newNode.addChild(child)
+
+    def generate(self, minHeap):
+        for x in range(int(minHeap.getSize()/2)):
+            try:
+                a = minHeap.popNode()
+                b = minHeap.popNode()
+                self.insertNode(a, b)
+            except:
+                self.insertSingleNode(a)
+
+        self.head = self.q.get()
+        return self
 
 
 class huffman:
 
     def __init__(self, minHeap):
         self.minHeap = minHeap
-        self.size = minHeap.getSize()
         self.huffmanTree = None
 
     def generateTree(self):
-        for x in range(self.size):
-            a = minHeap.popNode()
-            b = minHeap.popNode()
-            self.huffmanTree.insertNode(a, b)
+        self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
