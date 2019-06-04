@@ -131,7 +131,7 @@ class huffmanTree(tree):
         newNode.addChild(child)
 
     def generate(self, minHeap):
-        for x in range(int(minHeap.getSize()/2)):
+        for x in range(int(minHeap.getSize() / 2)):
             try:
                 a = minHeap.popNode()
                 b = minHeap.popNode()
@@ -142,12 +142,37 @@ class huffmanTree(tree):
         self.head = self.q.get()
         return self
 
+    def __str__(self):
+        return self.generateArray()
+
 
 class huffman:
 
-    def __init__(self, minHeap):
-        self.minHeap = minHeap
+    def __init__(self, path):
+        self.minHeap = None
         self.huffmanTree = None
+        self.frequency = {'EOF': 0}
+        self.path = path
+
+    def generateFrequency(self):
+        file = open(self.path, 'r')
+        for line in file:
+            for index, char in enumerate(line):
+                # print(index,char)
+                if (char in self.frequency):
+                    self.frequency.update({char: self.frequency[char] + 1})
+                else:
+                    self.frequency[char] = 1
+
+    def generateMinHeap(self):
+        item = self.frequency.popitem()
+        head = node(item[0], item[1])
+        self.minHeap = minHeap(head)
+        for n in self.frequency:
+            self.minHeap.insertNode(node(n, self.frequency[n]))
 
     def generateTree(self):
+        self.generateFrequency()
+        self.generateMinHeap()
         self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
+

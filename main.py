@@ -1,38 +1,39 @@
 import ds
 
 #file input
-quantity = {}
+# quantity = {}
 
 #insert EOF
-quantity['EOF'] = 0
+# quantity['EOF'] = 0
 
 #reading file
-file = open('./input.txt','r')
-for line in file:
-    for index,char in enumerate(line):
-        #print(index,char)
-        if (char in quantity):
-            quantity.update({char:quantity[char]+1})
-        else:
-            quantity[char] = 1
-
-
-
-print(len(quantity))
+# file = open('./input.txt','r')
+# for line in file:
+#     for index,char in enumerate(line):
+#         #print(index,char)
+#         if (char in quantity):
+#             quantity.update({char:quantity[char]+1})
+#         else:
+#             quantity[char] = 1
+#
+#
+#
+# print(len(quantity))
 
 #using min heap
-item = quantity.popitem()
-head = ds.node(item[0],item[1])
-minHeap = ds.minHeap(head)
-for n in quantity:
-    minHeap.insertNode(ds.node(n,quantity[n]))
+# item = quantity.popitem()
+# head = ds.node(item[0],item[1])
+# minHeap = ds.minHeap(head)
+# for n in quantity:
+#     minHeap.insertNode(ds.node(n,quantity[n]))
 
 # for x in minHeap.nodes:
 #     print(x)
 
-huffman = ds.huffman(minHeap)
+huffman = ds.huffman('./input.txt')
 huffman.generateTree()
-print(huffman.huffmanTree.head)
+print(huffman.huffmanTree)
+
 
 # head = ds.node('head',20)
 # n1 = ds.node('n1',17)
