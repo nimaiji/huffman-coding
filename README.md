@@ -18,12 +18,12 @@ huffman.generateTable()
 sample Huffman table in 'huffman.txt':
 ```
 Character bits  code
-C	        4	    0010
-H	        5	    00101
-m	        3	    010
-e	        4	    0101
- 	        2	    10
-!	        3	    101
+C       4	    0010
+H       5	    00101
+m       3	    010
+e       4	    0101
+        2	    10
+!       3	    101
 ```
 
 ## MinHeap
