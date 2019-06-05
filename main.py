@@ -32,7 +32,8 @@ import ds
 
 huffman = ds.huffman('./input.txt')
 huffman.generateTree()
-print(huffman.huffmanTree)
+huffman.generateTable()
+print(huffman.frequency)
 
 
 # head = ds.node('head',20)

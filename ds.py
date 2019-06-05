@@ -142,8 +142,8 @@ class huffmanTree(tree):
         self.head = self.q.get()
         return self
 
-    def __str__(self):
-        return self.generateArray()
+    # def __str__(self):
+    #     return self.generateArray()
 
 
 class huffman:
@@ -176,3 +176,16 @@ class huffman:
         self.generateMinHeap()
         self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
 
+    def generateTable(self):
+        self.generateTable_helper('', 0, self.huffmanTree.head)
+
+    def generateTable_helper(self, code, count, node):
+        # print(code)
+        if (node.childs == []):
+            file = open('huffman.txt', 'a+')
+            file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
+        else:
+            for index, n in enumerate(node.childs):
+                code += str(index)
+                count += 1
+                self.generateTable_helper(code, count, n)
