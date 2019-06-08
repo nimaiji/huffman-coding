@@ -27,12 +27,12 @@ class node:
 
     def removeChild(self, value):
         for child in self.childs:
-            if (child.value == value):
+            if child.value == value:
                 self.childs.remove(child)
 
     def removeParent(self, value):
         for parent in self.parents:
-            if (parent.value == value):
+            if parent.value == value:
                 self.parents.remove(parent)
 
     def isHead(self):
@@ -55,7 +55,7 @@ class tree:
         self.isPrefect = isPrefect
         self.nodes = []
 
-        if (head.isHead):
+        if head.isHead:
             self.head = head
             head.setHead()
             self.nodes.append(head)
@@ -82,7 +82,7 @@ class minHeap(tree):
         cuIndex = len(self.nodes)
 
         # defining direction
-        if (cuIndex % 2 == 0):
+        if cuIndex % 2 == 0:
             newNode.dir = dir.RIGHT
         else:
             newNode.dir = dir.LEFT
@@ -92,20 +92,20 @@ class minHeap(tree):
 
     def heapify(self, index):
         cuNode = self.nodes[index]
-        if (cuNode.dir == dir.LEFT):
+        if cuNode.dir == dir.LEFT:
             paNode = self.nodes[int((index - 1) / 2)]
         else:
             paNode = self.nodes[int((index - 2) / 2)]
 
-        if (cuNode.value < paNode.value):
+        if cuNode.value < paNode.value:
 
             # Swap Nodes
             cuNode.value, paNode.value = paNode.value, cuNode.value
             cuNode.name, paNode.name = paNode.name, cuNode.name
 
             # If current node is head do not continue heapify
-            if (not paNode.isHead()):
-                if (cuNode.dir == dir.LEFT):
+            if not paNode.isHead():
+                if cuNode.dir == dir.LEFT:
                     self.heapify(int((index - 1) / 2))
                 else:
                     self.heapify(int((index - 2) / 2))
@@ -121,7 +121,7 @@ class huffmanTree(tree):
         newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
         newNode.addChild(node1)
         newNode.addChild(node2)
-        if (self.q.qsize() == 1):
+        if self.q.qsize() == 1:
             self.insertNode(self.q.get(), newNode)
         else:
             self.q.put(newNode)
@@ -163,7 +163,7 @@ class huffman:
         for line in file:
             for index, char in enumerate(line):
                 # print(index,char)
-                if (char in self.frequency):
+                if char in self.frequency:
                     self.frequency.update({char: self.frequency[char] + 1})
                 else:
                     self.frequency[char] = 1
@@ -189,9 +189,9 @@ class huffman:
         # print(code)
         if (node.childs == []):
             file = open(self.tablePath, 'a+')
-            if (node.name == '\n'):
+            if node.name == '\n':
                 file.write("{}\t{}\t{}\n".format('\\n', count - 1, code[1:]))
-            elif (node.name == '\t'):
+            elif node.name == '\t':
                 file.write("{}\t{}\t{}\n".format('\\t', count - 1, code[1:]))
             else:
                 file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
@@ -205,12 +205,12 @@ class huffman:
         file = open(tablePath, 'r')
         for line in file:
             array = line.split('\t')
-            if(array[0] == '\\n' ):
-                self.tableDict['\n'] = array[1]
-            elif(array[0] == '\\t'):
-                self.tableDict['\t'] = array[1]
+            array[2] = array[2].replace('\n', '')
+            if array[0] == '\\n':
+                self.tableDict['\n'] = array[2]
+            elif array[0] == '\\t':
+                self.tableDict['\t'] = array[2]
             else:
-                self.tableDict[array[0]] = array[1]
-            array[2].replace('\n', '')
-            #print(array)
-        #print(self.tableDict)
+                self.tableDict[array[0]] = array[2]
+            # print(array)
+        # print(self.tableDict)
