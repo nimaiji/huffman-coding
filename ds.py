@@ -155,7 +155,8 @@ class huffman:
         self.huffmanTree = None
         self.frequency = {'EOF': 0}
         self.path = path
-        self.codePath = ''
+        self.tablePath = ''
+        self.tableDict = {}
 
     def generateFrequency(self):
         file = open(self.path, 'r')
@@ -179,15 +180,15 @@ class huffman:
         self.generateMinHeap()
         self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
 
-    def generateTable(self, codePath):
-        self.codePath = codePath
-        os.remove(codePath)
+    def generateTable(self, tablePath):
+        self.tablePath = tablePath
+        os.remove(tablePath)
         self.generateTable_helper('', 0, self.huffmanTree.head)
 
     def generateTable_helper(self, code, count, node):
         # print(code)
         if (node.childs == []):
-            file = open(self.codePath, 'a+')
+            file = open(self.tablePath, 'a+')
             if (node.name == '\n'):
                 file.write("{}\t{}\t{}\n".format('\\n', count - 1, code[1:]))
             elif (node.name == '\t'):
@@ -199,3 +200,17 @@ class huffman:
                 code += str(index)
                 count += 1
                 self.generateTable_helper(code, count, n)
+
+    def tableToDict(self, tablePath):
+        file = open(tablePath, 'r')
+        for line in file:
+            array = line.split('\t')
+            if(array[0] == '\\n' ):
+                self.tableDict['\n'] = array[1]
+            elif(array[0] == '\\t'):
+                self.tableDict['\t'] = array[1]
+            else:
+                self.tableDict[array[0]] = array[1]
+            array[2].replace('\n', '')
+            #print(array)
+        #print(self.tableDict)
