@@ -1,12 +1,12 @@
 import ds
-
-#file input
+from operator import itemgetter
+# file input
 # quantity = {}
 
-#insert EOF
+# insert EOF
 # quantity['EOF'] = 0
 
-#reading file
+# reading file
 # file = open('./input.txt','r')
 # for line in file:
 #     for index,char in enumerate(line):
@@ -20,7 +20,7 @@ import ds
 #
 # print(len(quantity))
 
-#using min heap
+# using min heap
 # item = quantity.popitem()
 # head = ds.node(item[0],item[1])
 # minHeap = ds.minHeap(head)
@@ -32,8 +32,16 @@ import ds
 
 huffman = ds.huffman('./input.txt')
 huffman.generateTree()
-huffman.generateTable()
-print(huffman.frequency)
+huffman.generateTable('./huffman.txt')
+
+# huffman.generateMinHeap()
+# for n in huffman.minHeap.nodes:
+#     print(n)
+# def helper(node):
+#     for n in node.childs:
+#         print(n)
+#         helper(n)
+# helper(huffman.minHeap.head)
 
 
 # head = ds.node('head',20)

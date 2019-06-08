@@ -1,6 +1,6 @@
 import enum
 import queue
-
+import os
 
 class dir(enum.Enum):
     LEFT = 0
@@ -79,6 +79,7 @@ class minHeap(tree):
     def insertNode(self, newNode):
         # new node index
         cuIndex = len(self.nodes)
+
         # defining direction
         if (cuIndex % 2 == 0):
             newNode.dir = dir.RIGHT
@@ -153,6 +154,7 @@ class huffman:
         self.huffmanTree = None
         self.frequency = {'EOF': 0}
         self.path = path
+        self.codePath = ''
 
     def generateFrequency(self):
         file = open(self.path, 'r')
@@ -176,14 +178,19 @@ class huffman:
         self.generateMinHeap()
         self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
 
-    def generateTable(self):
+    def generateTable(self,codePath):
+        self.codePath = codePath
+        os.remove(codePath)
         self.generateTable_helper('', 0, self.huffmanTree.head)
 
     def generateTable_helper(self, code, count, node):
         # print(code)
         if (node.childs == []):
-            file = open('huffman.txt', 'a+')
-            file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
+            file = open(self.codePath, 'a+')
+            if(node.name == '\n'):
+                file.write("{}\t{}\t{}\n".format('\\n', count - 1, code[1:]))
+            else:
+                file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
         else:
             for index, n in enumerate(node.childs):
                 code += str(index)
