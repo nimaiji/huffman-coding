@@ -2,6 +2,7 @@ import enum
 import queue
 import os
 
+
 class dir(enum.Enum):
     LEFT = 0
     RIGHT = 1
@@ -178,7 +179,7 @@ class huffman:
         self.generateMinHeap()
         self.huffmanTree = huffmanTree(node('head', -1)).generate(self.minHeap)
 
-    def generateTable(self,codePath):
+    def generateTable(self, codePath):
         self.codePath = codePath
         os.remove(codePath)
         self.generateTable_helper('', 0, self.huffmanTree.head)
@@ -187,8 +188,10 @@ class huffman:
         # print(code)
         if (node.childs == []):
             file = open(self.codePath, 'a+')
-            if(node.name == '\n'):
+            if (node.name == '\n'):
                 file.write("{}\t{}\t{}\n".format('\\n', count - 1, code[1:]))
+            elif (node.name == '\t'):
+                file.write("{}\t{}\t{}\n".format('\\t', count - 1, code[1:]))
             else:
                 file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
         else:
