@@ -167,6 +167,7 @@ class huffman:
                     self.frequency.update({char: self.frequency[char] + 1})
                 else:
                     self.frequency[char] = 1
+        file.close()
 
     def generateMinHeap(self):
         item = self.frequency.popitem()
@@ -195,11 +196,13 @@ class huffman:
                 file.write("{}\t{}\t{}\n".format('\\t', count - 1, code[1:]))
             else:
                 file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
+            file.close()
         else:
             for index, n in enumerate(node.childs):
                 code += str(index)
                 count += 1
                 self.generateTable_helper(code, count, n)
+
 
     def tableToDict(self, tablePath):
         file = open(tablePath, 'r')
@@ -214,3 +217,7 @@ class huffman:
                 self.tableDict[array[0]] = array[2]
             # print(array)
         # print(self.tableDict)
+
+        file.close()
+
+    # def exportZipped(self,zip_path):
