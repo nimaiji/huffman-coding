@@ -31,10 +31,11 @@ from operator import itemgetter
 #     print(x)
 
 huffman = ds.huffman('./input.txt')
-# huffman.generateTree()
-# huffman.generateTable('./huffman.txt')
+huffman.generateTree()
+huffman.generateTable('./huffman.txt')
 huffman.tableToDict('./huffman.txt')
-
+huffman.exportZipped('./zipped.txt')
+# print(huffman.huffmanTree.head.value *8)
 # huffman.generateMinHeap()
 # for n in huffman.minHeap.nodes:
 #     print(n)

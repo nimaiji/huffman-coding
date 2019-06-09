@@ -153,7 +153,7 @@ class huffman:
     def __init__(self, path):
         self.minHeap = None
         self.huffmanTree = None
-        self.frequency = {'EOF': 0}
+        self.frequency = {chr(0): 0}
         self.path = path
         self.tablePath = ''
         self.tableDict = {}
@@ -203,7 +203,6 @@ class huffman:
                 count += 1
                 self.generateTable_helper(code, count, n)
 
-
     def tableToDict(self, tablePath):
         file = open(tablePath, 'r')
         for line in file:
@@ -220,4 +219,20 @@ class huffman:
 
         file.close()
 
-    # def exportZipped(self,zip_path):
+    def exportZipped(self, zip_path):
+        str = ''
+        self.tableToDict(self.tablePath)
+        file = open(zip_path, 'wb')
+        source = open(self.path, 'r')
+        for line in source:
+            for char in enumerate(line):
+                str += (self.tableDict[char[1]])
+        str += (8 - len(str) % 8) * '0'
+
+        # write binary in file
+        xs = [str[i:i + 8] for i in range(0, len(str), 8)]
+        byte_arr = [int(x, 2) for x in xs]
+        binary_format = bytearray(byte_arr)
+        # print(binary_format)
+        file.write(binary_format)
+        file.close()
