@@ -8,11 +8,17 @@ write your file path and ready for huffman coding ...
 import ds
 
 huffman = ds.huffman('./input.txt')
+
 #generate huffman tree
+#this function automatically generate frequency and min heap for generating huffman tree
 huffman.generateTree()
 
 #then generate table
 huffman.generateTable()
+
+#export zipped file
+huffman.tableToDict() #convert huffman codes(huffman.txt or any huffman codes) to dict
+huffman.exportZipped('./zipped.txt')
 ```
 
 sample Huffman table in 'huffman.txt':
