@@ -1,21 +1,27 @@
 # Huffman coding
 In computer science and information theory, a Huffman code is a particular type of optimal prefix code that is commonly used for lossless data compression.
 
-write your file path and ready for huffman coding ...
+Write your file path and ready for huffman coding ...
 
 ## Usage
 ```python
 import ds
 
 huffman = ds.huffman('./input.txt')
+
 #generate huffman tree
+#this function automatically generate frequency and min heap for generating huffman tree
 huffman.generateTree()
 
 #then generate table
 huffman.generateTable()
+
+#export zipped file
+huffman.tableToDict() #convert huffman codes(huffman.txt or any huffman codes) to dict
+huffman.exportZipped('./zipped.txt')
 ```
 
-sample Huffman table in 'huffman.txt':
+Sample Huffman table in 'huffman.txt':
 ```
 Character bits  code
 C         4      0010
@@ -28,7 +34,7 @@ e         4      0101
 
 ## MinHeap
 
-you also can generate min-heap tree for huffman tree but remember in huffman class min-heap tree automatically generated for huffman-tree
+You can also generate min-heap tree for huffman tree but remember in huffman class min-heap tree automatically generated for huffman-tree
 ```python
 value = 20
 name = 'head'
