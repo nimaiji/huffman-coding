@@ -233,6 +233,38 @@ class huffman:
         xs = [str[i:i + 8] for i in range(0, len(str), 8)]
         byte_arr = [int(x, 2) for x in xs]
         binary_format = bytearray(byte_arr)
-        # print(binary_format)
         file.write(binary_format)
         file.close()
+
+    def importZipped(self, zip_path, table_path):
+        zip_file = open(zip_path, 'rb').read()
+        byte_arr = list(zip_file)
+        for index in range(len(byte_arr)):
+            byte = bin(byte_arr[index]).replace("0b", "")
+            if (8 - len(byte) % 8) != 8:
+                byte = ((8 - len(byte) % 8) * '0') + byte
+            byte_arr[index] = byte
+
+        string_bytes = "".join(map(str, byte_arr))
+        print(self.decoder(string_bytes, table_path))
+
+    def decoder(self, string_byte, table_path):
+
+        def getKeyByValue(value):
+            for item in self.tableDict.keys():
+                if self.tableDict[item] == value:
+                    return item
+            return ''
+
+        # generating table
+        self.tableToDict(table_path)
+        text = ''
+        code = ''
+        for index, bit in enumerate(string_byte):
+            if code in self.tableDict.values():
+                # find key by value
+                text += getKeyByValue(code)
+                code = ''
+            else:
+                code += bit
+        return text
