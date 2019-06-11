@@ -117,32 +117,45 @@ class huffmanTree(tree):
         super().__init__(head, name, isPrefect)
         self.q = queue.Queue()
 
-    def insertNode(self, node1, node2):
-        newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
-        newNode.addChild(node1)
-        newNode.addChild(node2)
-        if self.q.qsize() == 1:
-            self.insertNode(self.q.get(), newNode)
-        else:
-            self.q.put(newNode)
-
-    def insertSingleNode(self, child):
-        headNode = self.q.get()
-        newNode = node("{},{}".format(headNode.name, child.name), headNode.value + child.value)
-        newNode.addChild(headNode)
-        newNode.addChild(child)
+    # def insertNode(self, node1, node2):
+    #     newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
+    #     newNode.addChild(node1)
+    #     newNode.addChild(node2)
+    #     if self.q.qsize() == 1:
+    #         self.insertNode(self.q.get(), newNode)
+    #     else:
+    #         self.q.put(newNode)
+    #
+    # def insertSingleNode(self, child):
+    #     headNode = self.q.get()
+    #     newNode = node("{},{}".format(headNode.name, child.name), headNode.value + child.value)
+    #     newNode.addChild(headNode)
+    #     newNode.addChild(child)
 
     def generate(self, minHeap):
         for x in range(int(minHeap.getSize() / 2)):
             try:
                 a = minHeap.popNode()
                 b = minHeap.popNode()
-                self.insertNode(a, b)
+                self.q.put(a)
+                self.q.put(b)
             except:
-                self.insertSingleNode(a)
+                self.q.put(a)
 
+        self.generate_helper()
         self.head = self.q.get()
         return self
+
+    def generate_helper(self):
+
+        while self.q.qsize() > 1:
+            node1 = self.q.get()
+            node2 = self.q.get()
+            newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
+            # print(node1.name.replace('\n','\\n') + ' | ' +  node2.name.replace('\n','\\n') + ' | ' + newNode.name.replace('\n','\\n'))
+            newNode.addChild(node1)
+            newNode.addChild(node2)
+            self.q.put(newNode)
 
     # def __str__(self):
     #     return self.generateArray()
@@ -191,17 +204,21 @@ class huffman:
         if (node.childs == []):
             file = open(self.tablePath, 'a+')
             if node.name == '\n':
-                file.write("{}\t{}\t{}\n".format('\\n', count - 1, code[1:]))
+                file.write("{}\t{}\t{}\n".format('\\n', count - 1, code))
             elif node.name == '\t':
-                file.write("{}\t{}\t{}\n".format('\\t', count - 1, code[1:]))
+                file.write("{}\t{}\t{}\n".format('\\t', count - 1, code))
             else:
-                file.write("{}\t{}\t{}\n".format(node.name, count - 1, code[1:]))
+                file.write("{}\t{}\t{}\n".format(node.name, count - 1, code))
+
             file.close()
         else:
-            for index, n in enumerate(node.childs):
-                code += str(index)
-                count += 1
-                self.generateTable_helper(code, count, n)
+            self.generateTable_helper(code + '0', count + 1, node.childs[0])
+            self.generateTable_helper(code + '1', count + 1, node.childs[1])
+            # for index, n in enumerate(node.childs):
+            #     code += str(index)
+            #     count += 1
+            #     print(n.name + ' | ' + str(index))
+            #     self.generateTable_helper(code, count, n)
 
     def tableToDict(self, tablePath):
         file = open(tablePath, 'r')
@@ -236,7 +253,7 @@ class huffman:
         file.write(binary_format)
         file.close()
 
-    def importZipped(self, zip_path, table_path):
+    def importZipped(self, path, zip_path, table_path):
         zip_file = open(zip_path, 'rb').read()
         byte_arr = list(zip_file)
         for index in range(len(byte_arr)):
@@ -246,7 +263,11 @@ class huffman:
             byte_arr[index] = byte
 
         string_bytes = "".join(map(str, byte_arr))
-        print(self.decoder(string_bytes, table_path))
+        decoded_string = self.decoder(string_bytes, table_path)
+        file = open(path, 'w')
+        file.write(decoded_string)
+        file.close()
+        return decoded_string
 
     def decoder(self, string_byte, table_path):
 
@@ -260,11 +281,11 @@ class huffman:
         self.tableToDict(table_path)
         text = ''
         code = ''
-        for index, bit in enumerate(string_byte):
+        for index in range(len(string_byte)):
             if code in self.tableDict.values():
                 # find key by value
                 text += getKeyByValue(code)
-                code = ''
+                code = string_byte[index]
             else:
-                code += bit
+                code += string_byte[index]
         return text
