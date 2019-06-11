@@ -1,9 +1,9 @@
 # Huffman coding
-In computer science and information theory, a Huffman code is a particular type of optimal prefix code that is commonly used for lossless data compression.
+📎In computer science and information theory, a Huffman code is a particular type of optimal prefix code that is commonly used for lossless data compression.
 
-Write your file path and ready for huffman coding ...
+Write your file path and ready for encoding ...
 
-## Usage
+## 📖Usage
 ```python
 import ds
 
@@ -19,6 +19,10 @@ huffman.generateTable()
 #export zipped file
 huffman.tableToDict() #convert huffman codes(huffman.txt or any huffman codes) to dict
 huffman.exportZipped('./zipped.txt')
+
+#import zipped
+#if you generated huffman codes and zipped file before you can just import them and see what 's behind
+huffman.importZipped('./decoded.txt','./zippedd.txt','./huffman.txt')
 ```
 
 Sample Huffman table in 'huffman.txt':
