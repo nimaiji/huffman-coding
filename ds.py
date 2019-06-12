@@ -1,6 +1,11 @@
 import enum
 import queue
 import os
+import logging
+
+# Configs
+DEBUG = False
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s-%(levelname)s:  %(message)s', datefmt='%M:%S')
 
 
 class dir(enum.Enum):
@@ -60,6 +65,7 @@ class tree:
             head.setHead()
             self.nodes.append(head)
         else:
+            if DEBUG: logging.error("Illegal node:  {}".format_map(head.name))
             raise Exception("Illegal node")
 
     def insertNode(self):
@@ -117,21 +123,6 @@ class huffmanTree(tree):
         super().__init__(head, name, isPrefect)
         self.q = queue.Queue()
 
-    # def insertNode(self, node1, node2):
-    #     newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
-    #     newNode.addChild(node1)
-    #     newNode.addChild(node2)
-    #     if self.q.qsize() == 1:
-    #         self.insertNode(self.q.get(), newNode)
-    #     else:
-    #         self.q.put(newNode)
-    #
-    # def insertSingleNode(self, child):
-    #     headNode = self.q.get()
-    #     newNode = node("{},{}".format(headNode.name, child.name), headNode.value + child.value)
-    #     newNode.addChild(headNode)
-    #     newNode.addChild(child)
-
     def generate(self, minHeap):
         for x in range(int(minHeap.getSize() / 2)):
             try:
@@ -152,7 +143,11 @@ class huffmanTree(tree):
             node1 = self.q.get()
             node2 = self.q.get()
             newNode = node("{},{}".format(node1.name, node2.name), node1.value + node2.value)
-            # print(node1.name.replace('\n','\\n') + ' | ' +  node2.name.replace('\n','\\n') + ' | ' + newNode.name.replace('\n','\\n'))
+            if DEBUG: logging.info(
+                "Huffman tree nodes added: " + node1.name.replace('\n', '\\n') + ' | ' + node2.name.replace('\n',
+                                                                                                            '\\n') + ' | ' + newNode.name.replace(
+                    '\n', '\\n'))
+
             newNode.addChild(node1)
             newNode.addChild(node2)
             self.q.put(newNode)
@@ -180,6 +175,8 @@ class huffman:
                     self.frequency.update({char: self.frequency[char] + 1})
                 else:
                     self.frequency[char] = 1
+
+        if DEBUG: logging.info("Characters frequency:   {}".format(self.frequency))
         file.close()
 
     def generateMinHeap(self):
@@ -188,6 +185,7 @@ class huffman:
         self.minHeap = minHeap(head)
         for n in self.frequency:
             self.minHeap.insertNode(node(n, self.frequency[n]))
+        if DEBUG: logging.info("Min Heap generated: {}".format(self.minHeap.name))
 
     def generateTree(self):
         self.generateFrequency()
@@ -205,20 +203,18 @@ class huffman:
             file = open(self.tablePath, 'a+')
             if node.name == '\n':
                 file.write("{}\t{}\t{}\n".format('\\n', count - 1, code))
+                if DEBUG: logging.info("huffman table row:  {}\t{}\t{}\n".format('\\n', count - 1, code))
             elif node.name == '\t':
                 file.write("{}\t{}\t{}\n".format('\\t', count - 1, code))
+                if DEBUG: logging.info("huffman table row:  {}\t{}\t{}\n".format('\\t', count - 1, code))
             else:
                 file.write("{}\t{}\t{}\n".format(node.name, count - 1, code))
+                if DEBUG: logging.info("huffman table row:  {}\t{}\t{}\n".format(node.name, count - 1, code))
 
             file.close()
         else:
             self.generateTable_helper(code + '0', count + 1, node.childs[0])
             self.generateTable_helper(code + '1', count + 1, node.childs[1])
-            # for index, n in enumerate(node.childs):
-            #     code += str(index)
-            #     count += 1
-            #     print(n.name + ' | ' + str(index))
-            #     self.generateTable_helper(code, count, n)
 
     def tableToDict(self, tablePath):
         file = open(tablePath, 'r')
@@ -231,10 +227,8 @@ class huffman:
                 self.tableDict['\t'] = array[2]
             else:
                 self.tableDict[array[0]] = array[2]
-            # print(array)
-        # print(self.tableDict)
-
         file.close()
+        if DEBUG: logging.info("table converted to dict:    {}".format(self.tableDict))
 
     def exportZipped(self, zip_path):
         str = ''
@@ -253,6 +247,8 @@ class huffman:
         file.write(binary_format)
         file.close()
 
+        if DEBUG: logging.info("zipped file exported to:    {}".format(zip_path))
+
     def importZipped(self, path, zip_path, table_path):
         zip_file = open(zip_path, 'rb').read()
         byte_arr = list(zip_file)
@@ -267,7 +263,7 @@ class huffman:
         file = open(path, 'w')
         file.write(decoded_string)
         file.close()
-        return decoded_string
+        if DEBUG: logging.info("decoded file exported:  {}".format(path))
 
     def decoder(self, string_byte, table_path):
 

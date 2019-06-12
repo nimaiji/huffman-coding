@@ -1,6 +1,4 @@
 import ds
-import gui
-import logger
 
 huffman = ds.huffman('./input.txt')
 huffman.generateTree()
