@@ -36,6 +36,19 @@ e         4      0101
 !         3      101
 ```
 
+## Debug Mode
+You can turn debug mode on and see what 's happening in the background for your huffman tree ...
+open ds.py file and turn DEBUG = True
+```python
+...
+
+#config
+DEBUG = True
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s-%(levelname)s:  %(message)s', datefmt='%M:%S')
+
+...
+```
+
 ## MinHeap
 
 You can also generate min-heap tree for huffman tree but remember in huffman class min-heap tree automatically generated for huffman-tree
